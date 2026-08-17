@@ -134,7 +134,7 @@ database/
 
 ### 1. Clone Repository & Navigate
 ```bash
-git clone https://github.com/SadiyaBanu27/Enterprise-Sales-Customer-Intelligence.git
+git clone https://github.com/SadiyaBanu127/Enterprise-Sales-Customer-Intelligence.git
 cd Enterprise-Sales-Customer-Intelligence
 ```
 
