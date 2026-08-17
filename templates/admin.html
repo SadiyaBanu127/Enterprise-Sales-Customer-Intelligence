@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}User Management | Enterprise Intelligence{% endblock %}
+{% block page_title %}Administrative User & Access Control Panel{% endblock %}
+{% block page_subtitle %}Manage system users, role-based access permissions, and account status{% endblock %}
+
+{% block content %}
+
+<div class="chart-card">
+  <div class="chart-card-header">
+    <div>
+      <div class="chart-title">System User Directory</div>
+      <div class="chart-subtitle">Role-Based Access Control (RBAC) active accounts</div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Full Name</th>
+          <th>Username</th>
+          <th>Email Address</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Created Date</th>
+          <th>Last Login</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>#{{ u.user_id }}</td>
+          <td><strong>{{ u.full_name }}</strong></td>
+          <td><code>{{ u.username }}</code></td>
+          <td>{{ u.email }}</td>
+          <td>
+            <span class="badge {% if u.role == 'admin' %}badge-danger{% else %}badge-info{% endif %}">
+              {{ u.role | upper }}
+            </span>
+          </td>
+          <td>
+            <span class="badge {% if u.is_active %}badge-success{% else %}badge-warning{% endif %}">
+              {% if u.is_active %}Active{% else %}Inactive{% endif %}
+            </span>
+          </td>
+          <td>{{ u.created_at.strftime('%Y-%m-%d') if u.created_at else 'N/A' }}</td>
+          <td>{{ u.last_login.strftime('%Y-%m-%d %H:%M') if u.last_login else 'Never' }}</td>
+          <td>
+            {% if u.user_id != current_user.user_id %}
+            <button class="btn btn-outline" style="padding: 4px 8px; font-size: 0.75rem;" onclick="toggleUserStatus({{ u.user_id }})">
+              <i class="fa-solid fa-power-off"></i> Toggle
+            </button>
+            {% else %}
+            <span class="text-muted" style="font-size: 0.75rem;">Current Session</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  async function toggleUserStatus(userId) {
+    try {
+      const res = await App.fetchAPI(`/api/auth/users/${userId}/toggle-status`, { method: 'POST' });
+      if (res.success) {
+        App.showToast('User status updated successfully.', 'success');
+        setTimeout(() => window.location.reload(), 1000);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+</script>
+{% endblock %}

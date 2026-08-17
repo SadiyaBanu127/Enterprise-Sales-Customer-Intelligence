@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+{% block title %}Executive Dashboard | Enterprise Sales Intelligence{% endblock %}
+{% block page_title %}Executive C-Suite Dashboard{% endblock %}
+{% block page_subtitle %}Enterprise financial health, regional performance, customer lifetime metrics & AI intelligence{% endblock %}
+
+{% block content %}
+
+<!-- Dynamic Multi-Filter Card -->
+<div class="filter-card">
+  <div class="filter-grid">
+    <div class="filter-group">
+      <label>From Date</label>
+      <input type="date" id="filterStartDate" class="filter-control">
+    </div>
+    <div class="filter-group">
+      <label>To Date</label>
+      <input type="date" id="filterEndDate" class="filter-control">
+    </div>
+    <div class="filter-group">
+      <label>Geographic Region</label>
+      <select id="filterRegion" class="filter-control">
+        <option value="all">All Regions</option>
+        {% for r in regions %}
+          <option value="{{ r.region_id }}">{{ r.region_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Product Category</label>
+      <select id="filterCategory" class="filter-control">
+        <option value="all">All Categories</option>
+        {% for c in categories %}
+          <option value="{{ c.category_id }}">{{ c.category_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Customer Segment</label>
+      <select id="filterSegment" class="filter-control">
+        <option value="all">All Segments</option>
+        <option value="Champions">Champions</option>
+        <option value="Loyal Customers">Loyal Customers</option>
+        <option value="Potential Loyalists">Potential Loyalists</option>
+        <option value="New Customers">New Customers</option>
+        <option value="At Risk">At Risk</option>
+        <option value="Lost Customers">Lost Customers</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <button id="resetFiltersBtn" class="btn btn-outline" style="height: 38px;">
+        <i class="fa-solid fa-rotate-left"></i> Reset
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 8 Core KPI Cards Grid -->
+<div class="kpi-grid">
+  <!-- Total Revenue -->
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <span class="kpi-title">Total Revenue</span>
+      <div class="kpi-icon-bubble" style="background: rgba(37, 99, 235, 0.1); color: #2563eb;">
+        <i class="fa-solid fa-dollar-sign"></i>
+      </div>
+    </div>
+    <div class="kpi-value" id="kpiRevenue">$0.00</div>
+    <div class="kpi-footer">
+      <span class="kpi-trend-badge trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +14.2%</span>
+      <span>vs last year</span>
+    </div>
+  </div>
+
+  <!-- Total Net Profit -->
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <span class="kpi-title">Total Net Profit</span>
+      <div class="kpi-icon-bubble" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+        <i class="fa-solid fa-sack-dollar"></i>
+      </div>
+    </div>
+    <div class="kpi-value" id="kpiProfit">$0.00</div>
+    <div class="kpi-footer">
+      <span class="kpi-trend-badge trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +11.8%</span>
+      <span>operating profit</span>
+    </div>
+  </div>
+
+  <!-- Profit Margin -->
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <span class="kpi-title">Profit Margin</span>
+      <div class="kpi-icon-bubble" style="background: rgba(6, 182, 212, 0.1); color: #06b6d4;">
+        <i class="fa-solid fa-percent"></i>
+      </div>
+    </div>
+    <div class="kpi-value" id="kpiMargin">0.0%</div>
+    <div class="kpi-footer">
+      <span class="kpi-trend-badge trend-up"><i class="fa-solid fa-check"></i> Healthy</span>
+      <span>target: >30%</span>
+    </div>
+  </div>
+
+  <!-- Total Orders -->
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <span class="kpi-title">Total Orders</span>
+      <div class="kpi-icon-bubble" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+        <i class="fa-solid fa-cart-shopping"></i>
+      </div>
+    </div>
+    <div class="kpi-value" id="kpiOrders">0</div>
+    <div class="kpi-footer">
+      <span>Completed & delivered</span>
+    </div>
+  </div>
+
+  <!-- Total Customers -->
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <span class="kpi-title">Total Customers</span>
+      <div class="kpi-icon-bubble" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+        <i class="fa-solid fa-users"></i>
+      </div>
+    </div>
+    <div class="kpi-value" id="kpiCustomers">0</div>
+    <div class="kpi-footer">
+      <span>Enterprise accounts</span>
+    </div>
+  </div>
+
+  <!-- Average Order Value (AOV) -->
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <span class="kpi-title">Average Order Value</span>
+      <div class="kpi-icon-bubble" style="background: rgba(37, 99, 235, 0.1); color: #2563eb;">
+        <i class="fa-solid fa-receipt"></i>
+      </div>
+    </div>
+    <div class="kpi-value" id="kpiAOV">$0.00</div>
+    <div class="kpi-footer">
+      <span>Per transaction</span>
+    </div>
+  </div>
+
+  <!-- Customer Retention Rate -->
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <span class="kpi-title">Retention Rate</span>
+      <div class="kpi-icon-bubble" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+        <i class="fa-solid fa-arrows-rotate"></i>
+      </div>
+    </div>
+    <div class="kpi-value" id="kpiRetention">0.0%</div>
+    <div class="kpi-footer">
+      <span>Multi-order buyers</span>
+    </div>
+  </div>
+
+  <!-- Churn Rate -->
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <span class="kpi-title">High Churn Risk</span>
+      <div class="kpi-icon-bubble" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+        <i class="fa-solid fa-user-slash"></i>
+      </div>
+    </div>
+    <div class="kpi-value" id="kpiChurn" style="color: #ef4444;">0.0%</div>
+    <div class="kpi-footer">
+      <span>Accounts needing action</span>
+    </div>
+  </div>
+</div>
+
+<!-- Dynamic Automated Insights Section -->
+<div style="margin-bottom: 28px;">
+  <h2 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+    <i class="fa-solid fa-brain" style="color: var(--primary);"></i> Automated Business Intelligence Insights
+  </h2>
+  <div id="dynamicInsightsContainer">
+    <!-- Rendered via JS -->
+  </div>
+</div>
+
+<!-- Charts Grid Layer 1 -->
+<div class="charts-grid-2">
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Monthly Revenue & Profit Trends</div>
+        <div class="chart-subtitle">Historical monthly growth trajectory with profit margins</div>
+      </div>
+    </div>
+    <div class="chart-card-body">
+      <canvas id="revenueTrendCanvas"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Revenue by Geographic Region</div>
+        <div class="chart-subtitle">Market share breakdown across operating territories</div>
+      </div>
+    </div>
+    <div class="chart-card-body">
+      <canvas id="regionDonutCanvas"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Grid Layer 2 -->
+<div class="charts-grid-2">
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Product Category Performance</div>
+        <div class="chart-subtitle">Comparative revenue and profitability across business lines</div>
+      </div>
+    </div>
+    <div class="chart-card-body">
+      <canvas id="categoryBarCanvas"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Customer RFM Segment Share</div>
+        <div class="chart-subtitle">Customer base distribution by behavioral loyalty tier</div>
+      </div>
+    </div>
+    <div class="chart-card-body">
+      <canvas id="segmentPieCanvas"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Tables Grid -->
+<div class="charts-grid-2">
+  <!-- Top 10 Products -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Top 10 Enterprise Products</div>
+        <div class="chart-subtitle">Ranked by revenue contribution and realized margins</div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Revenue</th>
+            <th>Profit</th>
+            <th>Margin</th>
+          </tr>
+        </thead>
+        <tbody id="topProductsTableBody">
+          <!-- Rendered via JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Top 10 Customers -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Top 10 High-Value Customers</div>
+        <div class="chart-subtitle">Highest spend accounts, order cadence, and churn risk status</div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Customer & Account</th>
+            <th>Segment</th>
+            <th>Region</th>
+            <th>Orders</th>
+            <th>Total Spend</th>
+            <th>Churn Risk</th>
+          </tr>
+        </thead>
+        <tbody id="topCustomersTableBody">
+          <!-- Rendered via JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

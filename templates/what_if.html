@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}What-If Scenario Simulator | Enterprise Intelligence{% endblock %}
+{% block page_title %}What-If Business Scenario Simulator{% endblock %}
+{% block page_subtitle %}Simulate the financial impact of price changes, discount variations, sales volume shifts, and marketing investments{% endblock %}
+
+{% block content %}
+
+<div class="charts-grid-2">
+  <!-- Controls Panel -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Scenario Parameter Sliders</div>
+        <div class="chart-subtitle">Adjust key financial levers in real time</div>
+      </div>
+      <button id="resetScenarioBtn" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;">
+        <i class="fa-solid fa-rotate-left"></i> Reset Baseline
+      </button>
+    </div>
+    <div class="chart-card-body">
+      <!-- 1. Price Adjustment -->
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-main);">Price Adjustment (%):</label>
+          <strong id="valPrice" style="color: var(--primary);">0%</strong>
+        </div>
+        <input type="range" id="sliderPrice" min="-20" max="30" step="1" value="0" style="width: 100%; cursor: pointer;">
+        <small class="text-muted">Price elasticity testing (-20% to +30%)</small>
+      </div>
+
+      <!-- 2. Discount Rate Change -->
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-main);">Discount Allowance Shift (%):</label>
+          <strong id="valDiscount" style="color: var(--warning);">0%</strong>
+        </div>
+        <input type="range" id="sliderDiscount" min="-10" max="20" step="1" value="0" style="width: 100%; cursor: pointer;">
+        <small class="text-muted">Impact of promotional allowances (-10% to +20%)</small>
+      </div>
+
+      <!-- 3. Quantity / Volume Shift -->
+      <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-main);">Sales Volume / Demand Shift (%):</label>
+          <strong id="valQuantity" style="color: var(--info);">0%</strong>
+        </div>
+        <input type="range" id="sliderQuantity" min="-30" max="50" step="1" value="0" style="width: 100%; cursor: pointer;">
+        <small class="text-muted">Market demand and unit volume growth (-30% to +50%)</small>
+      </div>
+
+      <!-- 4. Marketing Spend -->
+      <div style="margin-bottom: 10px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-main);">Incremental Marketing Spend ($):</label>
+          <strong id="valMarketing" style="color: var(--success);">$0</strong>
+        </div>
+        <input type="range" id="sliderMarketing" min="0" max="200000" step="5000" value="0" style="width: 100%; cursor: pointer;">
+        <small class="text-muted">Direct demand-generation advertising spend ($0 to $200,000)</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Financial Variance Summary -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Projected Variance vs. Baseline</div>
+        <div class="chart-subtitle">Direct comparison of top-line, cost, and operating margin</div>
+      </div>
+    </div>
+    <div class="chart-card-body">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px;">
+        <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px;">
+          <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Baseline Revenue</div>
+          <div style="font-size: 1.2rem; font-weight: 800;" id="baseRevenue">$0.00</div>
+          <small class="text-muted">Simulated: <strong id="simRevenue" style="color: var(--primary);">$0.00</strong></small>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px;">
+          <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Baseline Operating Profit</div>
+          <div style="font-size: 1.2rem; font-weight: 800;" id="baseProfit">$0.00</div>
+          <small class="text-muted">Simulated: <strong id="simProfit" style="color: var(--success);">$0.00</strong></small>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px;">
+          <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Baseline Operating Cost</div>
+          <div style="font-size: 1.2rem; font-weight: 800;" id="baseCost">$0.00</div>
+          <small class="text-muted">Simulated: <strong id="simCost">$0.00</strong></small>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px;">
+          <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Baseline Profit Margin</div>
+          <div style="font-size: 1.2rem; font-weight: 800;" id="baseMargin">0.0%</div>
+          <small class="text-muted">Simulated: <strong id="simMargin">0.0%</strong></small>
+        </div>
+      </div>
+
+      <!-- Variance Badges -->
+      <div style="display: flex; gap: 12px; margin-bottom: 14px; flex-wrap: wrap;">
+        <div style="font-size: 0.85rem;">Revenue Variance: <strong id="varRevenue">+$0.00</strong></div>
+        <div style="font-size: 0.85rem;">Profit Variance: <strong id="varProfit">+$0.00</strong></div>
+        <div style="font-size: 0.85rem;">Margin Variance: <strong id="varMargin">+0.0%</strong></div>
+      </div>
+
+      <div class="insight-card insight-primary" style="margin-bottom: 0;">
+        <div class="insight-title"><i class="fa-solid fa-lightbulb"></i> Financial Evaluation:</div>
+        <div id="scenarioRecommendation" style="font-size: 0.82rem;">Adjust sliders to test scenarios.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Comparison Bar Chart -->
+<div class="chart-card" style="margin-top: 28px;">
+  <div class="chart-card-header">
+    <div>
+      <div class="chart-title">Baseline vs. What-If Financial Outcome Comparison</div>
+      <div class="chart-subtitle">Visual side-by-side assessment of key income statement lines</div>
+    </div>
+  </div>
+  <div class="chart-card-body">
+    <canvas id="scenarioComparisonCanvas"></canvas>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/what_if.js') }}"></script>
+{% endblock %}

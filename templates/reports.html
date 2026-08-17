@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}PDF Intelligence Reports | Enterprise Intelligence{% endblock %}
+{% block page_title %}Automated PDF Intelligence Reports{% endblock %}
+{% block page_subtitle %}Generate and download high-resolution C-Suite executive intelligence briefs rendered dynamically with ReportLab{% endblock %}
+
+{% block content %}
+
+<div class="charts-grid-2">
+  <!-- Report 1: Executive Summary -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Executive C-Suite Intelligence Briefing</div>
+        <div class="chart-subtitle">High-level financial KPIs, margins, top products, and strategic automated insights</div>
+      </div>
+      <span class="badge badge-primary">Most Popular</span>
+    </div>
+    <div class="chart-card-body" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px;">
+        Designed for senior stakeholders, this report compiles total gross revenue, operating margin performance, product line contributions, customer retention health, and prescriptive business recommendations.
+      </p>
+      <a href="{{ url_for('reports.download_pdf_report', report_type='executive_summary') }}" class="btn btn-primary download-report-btn" data-report-type="executive_summary" style="width: 100%; padding: 10px;">
+        <i class="fa-solid fa-file-arrow-down"></i> Generate & Download PDF Report
+      </a>
+    </div>
+  </div>
+
+  <!-- Report 2: Sales Performance -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Comprehensive Sales & Regional Report</div>
+        <div class="chart-subtitle">Detailed territorial performance, rep quota leaderboard, and category breakdowns</div>
+      </div>
+    </div>
+    <div class="chart-card-body" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px;">
+        Provides full operational visibility into regional market share, sales representative quota attainment percentages, top grossing SKUs, and territory growth velocity.
+      </p>
+      <a href="{{ url_for('reports.download_pdf_report', report_type='sales_performance') }}" class="btn btn-primary download-report-btn" data-report-type="sales_performance" style="width: 100%; padding: 10px;">
+        <i class="fa-solid fa-file-arrow-down"></i> Generate & Download PDF Report
+      </a>
+    </div>
+  </div>
+
+  <!-- Report 3: Customer & Churn Risk -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Customer Segmentation & Churn Risk Audit</div>
+        <div class="chart-subtitle">RFM loyalty segmentation, ML model evaluation metrics, and win-back priorities</div>
+      </div>
+    </div>
+    <div class="chart-card-body" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px;">
+        Summarizes customer lifetime value (CLV), RFM segment characteristics, and Scikit-Learn Random Forest churn model confusion matrix and ROC-AUC metrics.
+      </p>
+      <a href="{{ url_for('reports.download_pdf_report', report_type='customer_churn') }}" class="btn btn-primary download-report-btn" data-report-type="customer_churn" style="width: 100%; padding: 10px;">
+        <i class="fa-solid fa-file-arrow-down"></i> Generate & Download PDF Report
+      </a>
+    </div>
+  </div>
+
+  <!-- Report 4: Sales Forecasting -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Strategic Sales Forecasting & Demand Outlook</div>
+        <div class="chart-subtitle">Holt-Winters statistical forward forecast, 95% confidence intervals, and demand scenarios</div>
+      </div>
+    </div>
+    <div class="chart-card-body" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px;">
+        Forward projection of quarterly demand, expected sales expansion percentages, capacity planning considerations, and statistical error bounds.
+      </p>
+      <a href="{{ url_for('reports.download_pdf_report', report_type='sales_forecast') }}" class="btn btn-primary download-report-btn" data-report-type="sales_forecast" style="width: 100%; padding: 10px;">
+        <i class="fa-solid fa-file-arrow-down"></i> Generate & Download PDF Report
+      </a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/reports.js') }}"></script>
+{% endblock %}

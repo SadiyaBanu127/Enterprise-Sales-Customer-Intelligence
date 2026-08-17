@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}User Profile | Enterprise Intelligence{% endblock %}
+{% block page_title %}User Account Settings & Profile{% endblock %}
+{% block page_subtitle %}Manage your authentication credentials and session details{% endblock %}
+
+{% block content %}
+
+<div class="chart-card" style="max-width: 600px;">
+  <div class="chart-card-header">
+    <div>
+      <div class="chart-title">Account Profile Information</div>
+      <div class="chart-subtitle">Your credentials and access authorization</div>
+    </div>
+  </div>
+  <div class="chart-card-body">
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+      <div class="user-avatar" style="width: 56px; height: 56px; font-size: 1.4rem;">
+        {{ current_user.full_name[0] | upper }}
+      </div>
+      <div>
+        <h3 style="font-size: 1.1rem; color: var(--text-main);">{{ current_user.full_name }}</h3>
+        <span class="badge {% if current_user.is_admin %}badge-danger{% else %}badge-info{% endif %}">
+          {{ current_user.role | upper }} ACCESS
+        </span>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 0.85rem; margin-bottom: 20px;">
+      <div style="background: #f8fafc; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+        <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Username</div>
+        <strong style="color: var(--text-main);">{{ current_user.username }}</strong>
+      </div>
+      <div style="background: #f8fafc; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+        <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Email Address</div>
+        <strong style="color: var(--text-main);">{{ current_user.email }}</strong>
+      </div>
+      <div style="background: #f8fafc; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+        <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Account Created</div>
+        <strong style="color: var(--text-main);">{{ current_user.created_at.strftime('%Y-%m-%d') if current_user.created_at else 'N/A' }}</strong>
+      </div>
+      <div style="background: #f8fafc; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+        <div style="color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">Status</div>
+        <span class="badge badge-success">Active & Verified</span>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end;">
+      <a href="{{ url_for('auth.logout') }}" class="btn btn-outline" style="color: var(--danger); border-color: #fecaca;">
+        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+      </a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

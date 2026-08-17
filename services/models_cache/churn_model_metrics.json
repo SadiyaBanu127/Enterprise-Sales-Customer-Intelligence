@@ -1,0 +1,123 @@
+{
+  "model_name": "RandomForestClassifier (Enterprise v2.0)",
+  "trained_at": "2026-08-15 15:26:32",
+  "dataset_size": 10500,
+  "test_size": 2100,
+  "accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1_score": 1.0,
+  "roc_auc": 1.0,
+  "confusion_matrix": {
+    "true_negatives": 909,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "true_positives": 1191
+  },
+  "feature_importances": [
+    {
+      "feature": "recency_days",
+      "importance": 0.4274
+    },
+    {
+      "feature": "recency_score",
+      "importance": 0.3471
+    },
+    {
+      "feature": "total_orders_count",
+      "importance": 0.0949
+    },
+    {
+      "feature": "frequency_score",
+      "importance": 0.0468
+    },
+    {
+      "feature": "total_spend",
+      "importance": 0.0352
+    },
+    {
+      "feature": "monetary_score",
+      "importance": 0.0189
+    },
+    {
+      "feature": "average_order_value",
+      "importance": 0.0184
+    },
+    {
+      "feature": "tenure_days",
+      "importance": 0.0113
+    }
+  ],
+  "roc_curve": {
+    "fpr": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0781,
+      0.1474,
+      0.1793,
+      0.2123,
+      0.2244,
+      0.2519,
+      0.2772,
+      0.2937,
+      0.308,
+      0.3212,
+      0.3366,
+      0.3509,
+      0.3707,
+      0.3916,
+      0.4048,
+      0.4543
+    ],
+    "tpr": [
+      0.0,
+      0.5919,
+      0.7011,
+      0.712,
+      0.7305,
+      0.7406,
+      0.7481,
+      0.7683,
+      0.7775,
+      0.7851,
+      0.7993,
+      0.8245,
+      0.8438,
+      0.8657,
+      0.8816,
+      0.9093,
+      0.9521,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ]
+  }
+}

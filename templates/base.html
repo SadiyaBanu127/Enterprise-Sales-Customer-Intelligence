@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Enterprise Sales & Customer Intelligence{% endblock %}</title>
+  
+  <!-- Modern Font & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js & Plotly CDNs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+
+  <!-- Master Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+{% if current_user.is_authenticated %}
+<div class="app-container">
+  
+  <!-- Left Navigation Sidebar -->
+  <aside class="app-sidebar" id="appSidebar">
+    <div class="sidebar-brand">
+      <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Logo">
+    </div>
+
+    <div class="sidebar-section-title">Core Intelligence</div>
+    <ul class="sidebar-menu">
+      <li class="sidebar-menu-item">
+        <a href="{{ url_for('dashboard.dashboard_view') }}" class="sidebar-link {% if active_page == 'dashboard' %}active{% endif %}">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Executive Dashboard</span>
+        </a>
+      </li>
+      <li class="sidebar-menu-item">
+        <a href="{{ url_for('analytics.sales_view') }}" class="sidebar-link {% if active_page == 'sales' %}active{% endif %}">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Sales Analytics</span>
+        </a>
+      </li>
+      <li class="sidebar-menu-item">
+        <a href="{{ url_for('analytics.customers_view') }}" class="sidebar-link {% if active_page == 'customers' %}active{% endif %}">
+          <i class="fa-solid fa-users"></i>
+          <span>Customer Analytics & RFM</span>
+        </a>
+      </li>
+      <li class="sidebar-menu-item">
+        <a href="{{ url_for('analytics.products_view') }}" class="sidebar-link {% if active_page == 'products' %}active{% endif %}">
+          <i class="fa-solid fa-box-open"></i>
+          <span>Product Profitability</span>
+        </a>
+      </li>
+      <li class="sidebar-menu-item">
+        <a href="{{ url_for('analytics.regions_view') }}" class="sidebar-link {% if active_page == 'regions' %}active{% endif %}">
+          <i class="fa-solid fa-earth-americas"></i>
+          <span>Regional Performance</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-section-title">Predictive AI & Modeling</div>
+    <ul class="sidebar-menu">
+      <li class="sidebar-menu-item">
+        <a href="{{ url_for('prediction.churn_view') }}" class="sidebar-link {% if active_page == 'churn' %}active{% endif %}">
+          <i class="fa-solid fa-user-xmark"></i>
+          <span>Churn Prediction ML</span>
+        </a>
+      </li>
+      <li class="sidebar-menu-item">
+        <a href="{{ url_for('prediction.forecast_view') }}" class="sidebar-link {% if active_page == 'forecast' %}active{% endif %}">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+          <span>Sales Forecasting</span>
+        </a>
+      </li>
+      <li class="sidebar-menu-item">
+        <a href="{{ url_for('prediction.what_if_view') }}" class="sidebar-link {% if active_page == 'what-if' %}active{% endif %}">
+          <i class="fa-solid fa-sliders"></i>
+          <span>What-If Simulator</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-section-title">Data & Administration</div>
+    <ul class="sidebar-menu">
+      <li class="sidebar-menu-item">
+        <a href="{{ url_for('etl.upload_view') }}" class="sidebar-link {% if active_page == 'upload' %}active{% endif %}">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span>Data Ingestion & ETL</span>
+        </a>
+      </li>
+      <li class="sidebar-menu-item">
+        <a href="{{ url_for('reports.reports_view') }}" class="sidebar-link {% if active_page == 'reports' %}active{% endif %}">
+          <i class="fa-solid fa-file-pdf"></i>
+          <span>PDF Intelligence Reports</span>
+        </a>
+      </li>
+      {% if current_user.is_admin %}
+      <li class="sidebar-menu-item">
+        <a href="{{ url_for('auth.admin_panel') }}" class="sidebar-link {% if active_page == 'admin' %}active{% endif %}">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>User Management</span>
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+
+    <!-- User Profile Footer in Sidebar -->
+    <div class="sidebar-user">
+      <div class="user-avatar">
+        {{ current_user.full_name[0] | upper }}
+      </div>
+      <div class="user-details">
+        <div class="user-name">{{ current_user.full_name }}</div>
+        <div class="user-role">{{ current_user.role | capitalize }}</div>
+      </div>
+      <a href="{{ url_for('auth.logout') }}" style="color: #94a3b8; font-size: 1rem;" title="Logout">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content Body -->
+  <main class="app-main">
+    <!-- Header Topbar -->
+    <header class="app-header">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button id="sidebarToggle" class="btn btn-outline" style="display: none; padding: 6px 10px;">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="header-title-group">
+          <h1>{% block page_title %}Enterprise Intelligence Platform{% endblock %}</h1>
+          <p>{% block page_subtitle %}Real-time data analytics, machine learning & business intelligence engine{% endblock %}</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <span class="badge {% if current_user.is_admin %}badge-danger{% else %}badge-info{% endif %}" style="padding: 6px 12px; font-size: 0.8rem;">
+          <i class="fa-solid fa-user-shield"></i> {{ current_user.role | upper }} SESSION
+        </span>
+        <a href="{{ url_for('auth.profile') }}" class="btn btn-outline" style="padding: 6px 12px;">
+          <i class="fa-solid fa-gear"></i> Settings
+        </a>
+      </div>
+    </header>
+
+    <!-- Flash Messages Container -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="padding: 16px 32px 0;">
+          {% for category, message in messages %}
+            <div class="insight-card insight-{{ category }}" style="margin-bottom: 8px;">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Page Specific Body Content -->
+    <section class="page-content">
+      {% block content %}{% endblock %}
+    </section>
+  </main>
+
+</div>
+{% else %}
+  <!-- Authentication Layout -->
+  {% block auth_content %}{% endblock %}
+{% endif %}
+
+<!-- Core Scripts -->
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

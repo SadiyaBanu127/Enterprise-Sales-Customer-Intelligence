@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Data Upload & ETL | Enterprise Intelligence{% endblock %}
+{% block page_title %}Dataset Ingestion & ETL Pipeline Engine{% endblock %}
+{% block page_subtitle %}Upload new transactional CSV files, run data quality audits, and execute ETL transformation pipelines{% endblock %}
+
+{% block content %}
+
+<div class="charts-grid-2">
+  <!-- Upload Box -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Upload Transaction / Customer CSV Dataset</div>
+        <div class="chart-subtitle">Supports CSV and Excel datasets (.csv, .xlsx)</div>
+      </div>
+    </div>
+    <div class="chart-card-body">
+      <form id="datasetUploadForm">
+        <div class="filter-group" style="margin-bottom: 14px;">
+          <label>Target Dataset Entity</label>
+          <select id="datasetTypeSelect" class="filter-control">
+            <option value="orders">Orders & Transactions</option>
+            <option value="customers">Customers Master</option>
+            <option value="products">Product Catalog</option>
+          </select>
+        </div>
+
+        <div id="fileDropZone" style="border: 2px dashed #cbd5e1; border-radius: var(--radius-md); padding: 36px 20px; text-align: center; cursor: pointer; margin-bottom: 14px; background: #f8fafc; transition: all 0.2s;">
+          <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.5rem; color: #2563eb; margin-bottom: 10px;"></i>
+          <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-main);">Click to browse or drag and drop dataset file here</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">Standard CSV / Excel format up to 32MB</div>
+          <input type="file" id="csvFileInput" accept=".csv, .xlsx, .xls" style="display: none;">
+        </div>
+
+        <div id="selectedFileName" style="display: none; font-size: 0.85rem; font-weight: 600; color: var(--primary); margin-bottom: 14px;"></div>
+
+        <button type="submit" id="uploadSubmitBtn" class="btn btn-primary" style="width: 100%; padding: 10px;">
+          <i class="fa-solid fa-upload"></i> Upload & Validate Dataset
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ETL Pipeline Management -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">ETL Pipeline Orchestration</div>
+        <div class="chart-subtitle">Trigger automated Extract -> Transform -> Load and Power BI dataset export</div>
+      </div>
+    </div>
+    <div class="chart-card-body" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.6;">
+          The automated ETL pipeline extracts raw transactions, imputes missing values, removes duplicates, recalculates customer RFM scores, updates churn probabilities via ML models, and produces a Power BI-ready flattened dataset at:
+          <br><code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; color: var(--primary); font-size: 0.8rem;">data/processed/powerbi_sales_intelligence.csv</code>
+        </p>
+
+        <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 18px;">
+          <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Pipeline Processing Steps:</div>
+          <ul style="font-size: 0.78rem; color: var(--text-muted); padding-left: 18px; line-height: 1.6;">
+            <li><strong>Extract:</strong> Ingest raw customer, orders, and product files.</li>
+            <li><strong>Transform:</strong> Deduplication, IQR outlier filtering, date type casting.</li>
+            <li><strong>Load:</strong> High-speed relational database insertion into MySQL / SQLite.</li>
+            <li><strong>Enrich:</strong> RFM Quintile calculation & K-Means clustering.</li>
+          </ul>
+        </div>
+      </div>
+
+      <button id="triggerFullETLBtn" class="btn btn-outline" style="width: 100%; padding: 10px; border-color: var(--primary); color: var(--primary);">
+        <i class="fa-solid fa-play"></i> Re-Run Full Production ETL Pipeline
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Validation Summary (Appears after upload) -->
+<div id="uploadSummaryCard" class="chart-card" style="display: none; margin-top: 28px;">
+  <div class="chart-card-header">
+    <div>
+      <div class="chart-title">Data Validation & Cleaning Summary</div>
+      <div class="chart-subtitle">Audit report of missing values handled, duplicates purged, and valid records</div>
+    </div>
+  </div>
+  <div class="chart-card-body">
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 18px;">
+      <div style="background: #f8fafc; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+        <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Rows Received</div>
+        <div style="font-size: 1.3rem; font-weight: 800;" id="sumRowsReceived">0</div>
+      </div>
+      <div style="background: #f8fafc; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+        <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Columns</div>
+        <div style="font-size: 1.3rem; font-weight: 800;" id="sumColsReceived">0</div>
+      </div>
+      <div style="background: #f8fafc; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+        <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Nulls Fixed</div>
+        <div style="font-size: 1.3rem; font-weight: 800; color: #10b981;" id="sumNullsHandled">0</div>
+      </div>
+      <div style="background: #f8fafc; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+        <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Duplicates Removed</div>
+        <div style="font-size: 1.3rem; font-weight: 800; color: #f59e0b;" id="sumDupesHandled">0</div>
+      </div>
+      <div style="background: #f8fafc; padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+        <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Cleaned Records</div>
+        <div style="font-size: 1.3rem; font-weight: 800; color: #2563eb;" id="sumRowsCleaned">0</div>
+      </div>
+    </div>
+
+    <strong style="font-size: 0.85rem; display: block; margin-bottom: 8px;">Cleaned Sample Data Preview:</strong>
+    <div class="table-responsive" id="uploadPreviewTable"></div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+{% endblock %}

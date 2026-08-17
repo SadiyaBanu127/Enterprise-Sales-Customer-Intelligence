@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Sales Forecasting | Enterprise Intelligence{% endblock %}
+{% block page_title %}Time-Series Sales Forecasting & Demand Outlook{% endblock %}
+{% block page_subtitle %}Holt-Winters exponential smoothing, seasonal decomposition, and projected confidence bounds{% endblock %}
+
+{% block content %}
+
+<!-- Horizon Selector Bar -->
+<div class="filter-card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+  <div>
+    <strong style="font-size: 0.9rem; color: var(--text-main);">Forecast Horizon Period:</strong>
+    <span style="font-size: 0.82rem; color: var(--text-muted); margin-left: 6px;">Select forward projection window</span>
+  </div>
+  <div style="display: flex; gap: 8px;">
+    <button class="btn btn-outline horizon-btn" data-horizon="30">
+      <i class="fa-regular fa-calendar"></i> Next 30 Days
+    </button>
+    <button class="btn btn-primary horizon-btn active" data-horizon="90">
+      <i class="fa-regular fa-calendar-days"></i> Next 90 Days (Quarter)
+    </button>
+    <button class="btn btn-outline horizon-btn" data-horizon="180">
+      <i class="fa-solid fa-calendar-week"></i> Next 6 Months (180 Days)
+    </button>
+  </div>
+</div>
+
+<!-- Forecast Metrics Summary -->
+<div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr);">
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <span class="kpi-title">Expected Total Revenue</span>
+      <div class="kpi-icon-bubble" style="background: rgba(37, 99, 235, 0.1); color: #2563eb;"><i class="fa-solid fa-calculator"></i></div>
+    </div>
+    <div class="kpi-value" id="fcExpectedRevenue" style="color: #2563eb;">$0.00</div>
+    <div class="kpi-footer"><span>Forecasted cumulative sales</span></div>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <span class="kpi-title">Projected Growth vs Prior Period</span>
+      <div class="kpi-icon-bubble" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><i class="fa-solid fa-chart-line"></i></div>
+    </div>
+    <div class="kpi-value" id="fcGrowthRate">0.0%</div>
+    <div class="kpi-footer"><span>Expected top-line expansion</span></div>
+  </div>
+
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <span class="kpi-title">Forecasting Algorithm</span>
+      <div class="kpi-icon-bubble" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;"><i class="fa-solid fa-microchip"></i></div>
+    </div>
+    <div class="kpi-value" id="fcModelName" style="font-size: 1rem; margin: 8px 0;">Holt-Winters</div>
+    <div class="kpi-footer"><span>Additive trend & seasonality</span></div>
+  </div>
+</div>
+
+<!-- Interactive Forecast Chart -->
+<div class="chart-card" style="margin-bottom: 28px;">
+  <div class="chart-card-header">
+    <div>
+      <div class="chart-title">Historical Sales & Forward Forecast with 95% Confidence Bounds</div>
+      <div class="chart-subtitle">Solid line = Actual historical revenue | Dashed line = Projected trajectory | Shaded area = 95% confidence interval</div>
+    </div>
+  </div>
+  <div class="chart-card-body" style="height: 400px;">
+    <canvas id="forecastChartCanvas"></canvas>
+  </div>
+</div>
+
+<!-- Business Interpretation & Planning Action -->
+<div class="insight-card insight-primary">
+  <div class="insight-title" style="font-size: 0.95rem;">
+    <i class="fa-solid fa-clipboard-check"></i> Executive Demand Outlook & Operational Interpretation
+  </div>
+  <div class="insight-desc" id="fcInterpretationText" style="font-size: 0.88rem; line-height: 1.6; margin-top: 6px;">
+    Generating forward statistical projection...
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/forecast.js') }}"></script>
+{% endblock %}

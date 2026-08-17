@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Sales Analytics | Enterprise Intelligence{% endblock %}
+{% block page_title %}Sales & Revenue Analytics{% endblock %}
+{% block page_subtitle %}In-depth transaction tracking, growth velocity, and sales representative quota attainment{% endblock %}
+
+{% block content %}
+
+<!-- Sales Trend and MoM Growth -->
+<div class="charts-grid-2">
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Revenue & Net Profit Velocity</div>
+        <div class="chart-subtitle">Historical performance trends and gross margin margins</div>
+      </div>
+    </div>
+    <div class="chart-card-body">
+      <canvas id="salesTrendCanvas"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Month-over-Month (MoM) Revenue Growth Rate</div>
+        <div class="chart-subtitle">Percentage growth rate comparison across consecutive months</div>
+      </div>
+    </div>
+    <div class="chart-card-body">
+      <canvas id="growthRateCanvas"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Sales Representative Quota Leaderboard -->
+<div class="chart-card" style="margin-bottom: 28px;">
+  <div class="chart-card-header">
+    <div>
+      <div class="chart-title">Sales Representative Quota Attainment Leaderboard</div>
+      <div class="chart-subtitle">Individual sales rep targets, closed revenue, profit generated, and target completion</div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Sales Representative</th>
+          <th>Territory</th>
+          <th>Annual Quota</th>
+          <th>Revenue Closed</th>
+          <th>Profit Generated</th>
+          <th>Deals</th>
+          <th>Quota Attainment</th>
+          <th>Performance Status</th>
+        </tr>
+      </thead>
+      <tbody id="repLeaderboardBody">
+        <!-- Rendered via JS -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Top Products Breakdown -->
+<div class="chart-card">
+  <div class="chart-card-header">
+    <div>
+      <div class="chart-title">Product Sales Contribution Ranking</div>
+      <div class="chart-subtitle">Volume sold, total revenue, and realized profit margins by SKU</div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Product Name</th>
+          <th>Category</th>
+          <th>Total Revenue</th>
+          <th>Total Profit</th>
+          <th>Quantity Sold</th>
+          <th>Margin %</th>
+        </tr>
+      </thead>
+      <tbody id="salesProductsBody">
+        <!-- Rendered via JS -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/sales.js') }}"></script>
+{% endblock %}

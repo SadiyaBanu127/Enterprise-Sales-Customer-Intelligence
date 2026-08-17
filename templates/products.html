@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Product Profitability | Enterprise Intelligence{% endblock %}
+{% block page_title %}Product Analytics & 4-Quadrant Profitability Matrix{% endblock %}
+{% block page_subtitle %}Strategic portfolio analysis, gross margin realization, discount sensitivity, and SKU optimization{% endblock %}
+
+{% block content %}
+
+<!-- Quadrant Counts Summary -->
+<div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr);">
+  <div class="kpi-card" style="border-top: 3px solid #10b981;">
+    <div class="kpi-header">
+      <span class="kpi-title">Star Performers</span>
+      <div class="kpi-icon-bubble" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><i class="fa-solid fa-star"></i></div>
+    </div>
+    <div class="kpi-value" id="countStars" style="color: #10b981;">0</div>
+    <div class="kpi-footer"><span>High Revenue + High Profit</span></div>
+  </div>
+
+  <div class="kpi-card" style="border-top: 3px solid #3b82f6;">
+    <div class="kpi-header">
+      <span class="kpi-title">Volume Drivers</span>
+      <div class="kpi-icon-bubble" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;"><i class="fa-solid fa-boxes-stacked"></i></div>
+    </div>
+    <div class="kpi-value" id="countVolume" style="color: #3b82f6;">0</div>
+    <div class="kpi-footer"><span>High Revenue + Low Profit</span></div>
+  </div>
+
+  <div class="kpi-card" style="border-top: 3px solid #f59e0b;">
+    <div class="kpi-header">
+      <span class="kpi-title">Niche High Margin</span>
+      <div class="kpi-icon-bubble" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;"><i class="fa-solid fa-award"></i></div>
+    </div>
+    <div class="kpi-value" id="countNiche" style="color: #f59e0b;">0</div>
+    <div class="kpi-footer"><span>Low Revenue + High Profit</span></div>
+  </div>
+
+  <div class="kpi-card" style="border-top: 3px solid #ef4444;">
+    <div class="kpi-header">
+      <span class="kpi-title">Underperformers</span>
+      <div class="kpi-icon-bubble" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+    </div>
+    <div class="kpi-value" id="countUnder" style="color: #ef4444;">0</div>
+    <div class="kpi-footer"><span>Low Revenue + Low Profit</span></div>
+  </div>
+</div>
+
+<!-- Scatter Matrix & Top Leaders -->
+<div class="charts-grid-2">
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Product Profitability Matrix (Revenue vs. Net Profit)</div>
+        <div class="chart-subtitle">Scatter plot positioned by benchmark crosshairs</div>
+      </div>
+    </div>
+    <div class="chart-card-body" style="height: 380px;">
+      <canvas id="profitabilityMatrixCanvas"></canvas>
+    </div>
+  </div>
+
+  <!-- SKU Leaderboard Rankings -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Product Performance Standouts</div>
+        <div class="chart-subtitle">Top product lines across key commercial metrics</div>
+      </div>
+    </div>
+    <div class="chart-card-body" style="display: flex; flex-direction: column; gap: 16px;">
+      <div>
+        <strong style="font-size: 0.85rem; color: var(--primary);">Top SKUs by Total Revenue:</strong>
+        <div id="topRevList"></div>
+      </div>
+      <div>
+        <strong style="font-size: 0.85rem; color: var(--success);">Top SKUs by Total Net Profit:</strong>
+        <div id="topProfitList"></div>
+      </div>
+      <div>
+        <strong style="font-size: 0.85rem; color: #8b5cf6;">Top SKUs by Units Sold:</strong>
+        <div id="topUnitsList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Full Product Catalog Table -->
+<div class="chart-card">
+  <div class="chart-card-header">
+    <div>
+      <div class="chart-title">Enterprise Product Catalog & Strategic Recommendations</div>
+      <div class="chart-subtitle">Realized margin %, sales volume, quadrant classification, and prescriptive business action</div>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>SKU</th>
+          <th>Product Name</th>
+          <th>Category</th>
+          <th>Unit Price</th>
+          <th>Units Sold</th>
+          <th>Total Revenue</th>
+          <th>Total Profit</th>
+          <th>Margin %</th>
+          <th>Quadrant</th>
+          <th>Strategic Action</th>
+        </tr>
+      </thead>
+      <tbody id="allProductsTableBody">
+        <!-- Rendered via JS -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/products.js') }}"></script>
+{% endblock %}

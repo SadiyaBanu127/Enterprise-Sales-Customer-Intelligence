@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Login | Enterprise Sales & Customer Intelligence{% endblock %}
+
+{% block auth_content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Logo">
+      <div class="auth-title">Welcome Back</div>
+      <div class="auth-subtitle">Sign in to access executive analytics & predictive intelligence</div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="insight-card insight-{{ category }}" style="margin-bottom: 16px;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('auth.login') }}">
+      <div class="filter-group" style="margin-bottom: 16px;">
+        <label>Username or Work Email</label>
+        <input type="text" name="username" id="loginUsername" class="filter-control" placeholder="admin or analyst" required autofocus>
+      </div>
+
+      <div class="filter-group" style="margin-bottom: 20px;">
+        <label>Password</label>
+        <input type="password" name="password" id="loginPassword" class="filter-control" placeholder="••••••••••••" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 0.95rem;">
+        <i class="fa-solid fa-lock"></i> Secure Sign In
+      </button>
+    </form>
+
+    <!-- Quick Demo Credentials Box -->
+    <div style="margin-top: 24px; padding: 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-sm); font-size: 0.8rem;">
+      <strong style="display: block; margin-bottom: 6px; color: var(--text-main);">Quick Demo Accounts:</strong>
+      <div style="display: flex; gap: 8px;">
+        <button type="button" class="btn btn-outline" style="flex: 1; padding: 6px; font-size: 0.75rem;" onclick="fillLogin('admin', 'Admin@123')">
+          <i class="fa-solid fa-user-shield"></i> Admin Demo
+        </button>
+        <button type="button" class="btn btn-outline" style="flex: 1; padding: 6px; font-size: 0.75rem;" onclick="fillLogin('analyst', 'Analyst@123')">
+          <i class="fa-solid fa-chart-pie"></i> Analyst Demo
+        </button>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px; font-size: 0.83rem; color: var(--text-muted);">
+      Don't have an account? <a href="{{ url_for('auth.register') }}" style="color: var(--primary); font-weight: 600;">Create one here</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function fillLogin(u, p) {
+    document.getElementById('loginUsername').value = u;
+    document.getElementById('loginPassword').value = p;
+  }
+</script>
+{% endblock %}
