@@ -51,6 +51,15 @@ def create_app(config_class=None):
     app.register_blueprint(etl_bp)
     app.register_blueprint(reports_bp)
 
+    # Ensure every supported production/development launch path (including
+    # ``flask run``) has the schema and documented demo accounts available.
+    # Previously this ran only in the ``__main__`` block, so launching through
+    # the Flask CLI could render the login page before its users table/accounts
+    # had been created.  Tests retain control of their isolated database setup.
+    if not app.config.get('TESTING'):
+        from database.init_db import init_database
+        init_database(app)
+
     # Global Context Processor
     @app.context_processor
     def inject_global_vars():
@@ -80,11 +89,6 @@ def create_app(config_class=None):
 app = create_app()
 
 if __name__ == '__main__':
-    # Ensure database tables exist
-    with app.app_context():
-        from database.init_db import init_database
-        init_database(app)
-
     host = os.environ.get('HOST', '127.0.0.1')
     port = int(os.environ.get('PORT', 5000))
     print(f"\n=======================================================")

@@ -1,64 +1,35 @@
 {% extends "base.html" %}
-{% block title %}Login | Enterprise Sales & Customer Intelligence{% endblock %}
-
+{% block title %}Sign In | Enterprise Sales & Customer Intelligence{% endblock %}
 {% block auth_content %}
-<div class="auth-wrapper">
-  <div class="auth-card">
-    <div class="auth-header">
-      <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Logo">
-      <div class="auth-title">Welcome Back</div>
-      <div class="auth-subtitle">Sign in to access executive analytics & predictive intelligence</div>
+<main class="login-shell">
+  <section class="login-showcase" aria-labelledby="platform-name">
+    <div class="login-grid" aria-hidden="true"></div><div class="login-orb login-orb-one" aria-hidden="true"></div><div class="login-orb login-orb-two" aria-hidden="true"></div>
+    <div class="showcase-content">
+      <a class="showcase-brand" href="{{ url_for('auth.login') }}" aria-label="Enterprise Sales Intelligence home"><img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Enterprise Sales Intelligence"></a>
+      <div class="showcase-copy"><span class="showcase-eyebrow"><i class="fa-solid fa-sparkles"></i> Enterprise decision intelligence</span><h1 id="platform-name">Enterprise Sales &amp; Customer Intelligence Platform</h1><p>Turn Business Data into Intelligent Decisions</p></div>
+      <div class="showcase-features" aria-label="Platform capabilities">
+        <article class="showcase-feature"><span class="feature-icon"><i class="fa-solid fa-chart-line"></i></span><div><h2>Sales Intelligence</h2><p>Reveal revenue drivers and performance trends.</p></div></article>
+        <article class="showcase-feature"><span class="feature-icon"><i class="fa-solid fa-users-viewfinder"></i></span><div><h2>Customer Analytics</h2><p>Understand segments, value, and engagement.</p></div></article>
+        <article class="showcase-feature"><span class="feature-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span><div><h2>Predictive Insights</h2><p>Act earlier with forecasting and churn signals.</p></div></article>
+      </div>
     </div>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="insight-card insight-{{ category }}" style="margin-bottom: 16px;">
-            {{ message }}
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-
-    <form method="POST" action="{{ url_for('auth.login') }}">
-      <div class="filter-group" style="margin-bottom: 16px;">
-        <label>Username or Work Email</label>
-        <input type="text" name="username" id="loginUsername" class="filter-control" placeholder="admin or analyst" required autofocus>
-      </div>
-
-      <div class="filter-group" style="margin-bottom: 20px;">
-        <label>Password</label>
-        <input type="password" name="password" id="loginPassword" class="filter-control" placeholder="••••••••••••" required>
-      </div>
-
-      <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 0.95rem;">
-        <i class="fa-solid fa-lock"></i> Secure Sign In
-      </button>
+    <div class="analytics-visual" aria-hidden="true"><div class="visual-heading"><span>Revenue velocity</span><strong>+24.8%</strong></div><div class="visual-chart"><i></i><i></i><i></i><i></i><i></i><svg viewBox="0 0 300 102" preserveAspectRatio="none"><path d="M0,88 C24,83 31,67 55,70 S86,81 105,52 S139,62 158,38 S190,48 209,25 S239,37 258,15 S281,23 300,3" /></svg></div></div>
+  </section>
+  <section class="login-panel" aria-labelledby="login-title"><div class="login-card">
+    <div class="login-card-header"><div class="login-mobile-brand"><img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Enterprise Sales Intelligence"></div><span class="login-kicker">Intelligence workspace</span><h2 id="login-title">Welcome Back</h2><p>Sign in to access your intelligence dashboard</p></div>
+    {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="login-alerts" aria-live="polite">{% for category, message in messages %}<div class="login-alert login-alert-{{ category }}"><i class="fa-solid fa-circle-exclamation"></i><span>{{ message }}</span></div>{% endfor %}</div>{% endif %}{% endwith %}
+    <form method="POST" action="{{ url_for('auth.login') }}" class="login-form" id="loginForm">
+      <div class="login-field"><label for="loginUsername">Username or work email</label><div class="login-input-wrap"><i class="fa-regular fa-user" aria-hidden="true"></i><input type="text" name="username" id="loginUsername" autocomplete="username" placeholder="Enter your username or email" required autofocus></div></div>
+      <div class="login-field"><label for="loginPassword">Password</label><div class="login-input-wrap"><i class="fa-solid fa-lock" aria-hidden="true"></i><input type="password" name="password" id="loginPassword" autocomplete="current-password" placeholder="Enter your password" required><button class="password-toggle" type="button" id="passwordToggle" aria-label="Show password" aria-pressed="false"><i class="fa-regular fa-eye"></i><span>Show</span></button></div></div>
+      <button type="submit" class="login-submit" id="loginSubmit"><span class="login-submit-label">Sign in securely</span><span class="login-submit-loading"><i class="fa-solid fa-circle-notch fa-spin"></i> Signing in...</span><i class="fa-solid fa-arrow-right login-submit-arrow" aria-hidden="true"></i></button>
     </form>
-
-    <!-- Quick Demo Credentials Box -->
-    <div style="margin-top: 24px; padding: 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-sm); font-size: 0.8rem;">
-      <strong style="display: block; margin-bottom: 6px; color: var(--text-main);">Quick Demo Accounts:</strong>
-      <div style="display: flex; gap: 8px;">
-        <button type="button" class="btn btn-outline" style="flex: 1; padding: 6px; font-size: 0.75rem;" onclick="fillLogin('admin', 'Admin@123')">
-          <i class="fa-solid fa-user-shield"></i> Admin Demo
-        </button>
-        <button type="button" class="btn btn-outline" style="flex: 1; padding: 6px; font-size: 0.75rem;" onclick="fillLogin('analyst', 'Analyst@123')">
-          <i class="fa-solid fa-chart-pie"></i> Analyst Demo
-        </button>
-      </div>
-    </div>
-
-    <div style="text-align: center; margin-top: 20px; font-size: 0.83rem; color: var(--text-muted);">
-      Don't have an account? <a href="{{ url_for('auth.register') }}" style="color: var(--primary); font-weight: 600;">Create one here</a>
-    </div>
-  </div>
-</div>
-
-<script>
-  function fillLogin(u, p) {
-    document.getElementById('loginUsername').value = u;
-    document.getElementById('loginPassword').value = p;
-  }
-</script>
+    <div class="secure-access"><i class="fa-solid fa-shield-halved"></i><span>Secure Enterprise Access</span><span class="secure-dot"></span></div><p class="login-register">New to the platform? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
+  </div></section>
+</main>
 {% endblock %}
+{% block scripts %}<script>
+  (() => { const form = document.getElementById('loginForm'), password = document.getElementById('loginPassword'), toggle = document.getElementById('passwordToggle'), submit = document.getElementById('loginSubmit');
+    toggle.addEventListener('click', () => { const showing = password.type === 'text'; password.type = showing ? 'password' : 'text'; toggle.setAttribute('aria-label', showing ? 'Show password' : 'Hide password'); toggle.setAttribute('aria-pressed', String(!showing)); toggle.querySelector('i').className = showing ? 'fa-regular fa-eye' : 'fa-regular fa-eye-slash'; toggle.querySelector('span').textContent = showing ? 'Show' : 'Hide'; password.focus(); });
+    form.addEventListener('submit', () => { if (!form.checkValidity()) return; submit.classList.add('is-loading'); submit.disabled = true; });
+  })();
+</script>{% endblock %}
