@@ -30,6 +30,19 @@ def test_login_success(client):
     assert data['success'] is True
     assert data['user']['role'] == 'admin'
 
+def test_login_form_authenticates_and_redirects_to_dashboard(client):
+    res = client.post('/login', data={'username': 'test_admin', 'password': 'Admin@123'})
+    assert res.status_code == 302
+    assert res.headers['Location'].endswith('/dashboard')
+
+    dashboard = client.get('/dashboard')
+    assert dashboard.status_code == 200
+
+def test_login_page_serves_logo_asset(client):
+    res = client.get('/static/images/logo.svg')
+    assert res.status_code == 200
+    assert res.mimetype == 'image/svg+xml'
+
 def test_login_invalid_password(client):
     res = client.post('/api/auth/login', json={'username': 'test_admin', 'password': 'WrongPassword'})
     assert res.status_code == 401

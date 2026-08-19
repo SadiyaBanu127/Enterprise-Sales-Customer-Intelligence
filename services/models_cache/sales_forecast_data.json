@@ -1,10 +1,10 @@
 {
-  "horizon_days": 90,
+  "horizon_days": 30,
   "model_name": "Holt-Winters Exponential Smoothing (Damped Additive Trend)",
-  "expected_revenue": 60742401.35,
-  "prior_period_revenue": 66790876.5,
-  "expected_growth_rate": -9.06,
-  "interpretation": "Potential seasonal softening identified (-9.06% contraction projected). Implement targeted marketing initiatives and discount optimization for at-risk accounts.",
+  "expected_revenue": 21058764.67,
+  "prior_period_revenue": 22147886.5,
+  "expected_growth_rate": -4.92,
+  "interpretation": "Potential seasonal softening identified (-4.92% contraction projected). Implement targeted marketing initiatives and discount optimization for at-risk accounts.",
   "historical": {
     "dates": [
       "2025-08-10",
@@ -120,58 +120,26 @@
       "2026-08-09",
       "2026-08-16",
       "2026-08-23",
-      "2026-08-30",
-      "2026-09-06",
-      "2026-09-13",
-      "2026-09-20",
-      "2026-09-27",
-      "2026-10-04",
-      "2026-10-11",
-      "2026-10-18",
-      "2026-10-25"
+      "2026-08-30"
     ],
     "values": [
       5476659.54,
       5358696.72,
       5115214.17,
-      5108194.24,
-      5210175.98,
-      4991726.28,
-      4894464.95,
-      5025140.48,
-      4879903.53,
-      4947717.05,
-      4904248.25,
-      4830260.15
+      5108194.24
     ],
     "lower_ci": [
       4960667.51,
       4801361.63,
       4519397.89,
-      4476235.64,
-      4544033.13,
-      4293069.76,
-      4164742.01,
-      4265620.78,
-      4091712.68,
-      4131862.01,
-      4061636.79,
-      3961716.13
+      4476235.64
     ],
     "upper_ci": [
       5992651.57,
       5916031.82,
       5711030.45,
-      5740152.84,
-      5876318.83,
-      5690382.79,
-      5624187.88,
-      5784660.19,
-      5668094.38,
-      5763572.09,
-      5746859.72,
-      5698804.16
+      5740152.84
     ]
   },
-  "generated_at": "2026-08-15 15:29:20"
+  "generated_at": "2026-08-19 14:26:36"
 }
